@@ -6,3 +6,6 @@ test2.interbyte.be
 
 [file_servers]
 test3.interbyte.be
+
+[workstations]
+automation1.interbyte.be
