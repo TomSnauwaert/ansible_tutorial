@@ -1,0 +1,5 @@
+- name: add ssh key for ansioblebot
+  authorized_key:
+    user: ansiblebot
+    key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIrAp/RI0yb/yPVRcbgzMDFC6vsBHgkPrDjU46M3Ncvc ansible"
+
