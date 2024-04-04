@@ -58,6 +58,30 @@
       state: latest
     when: ansible_distribution == "CentOS"
 
+  - name: start httpd (CentOS)
+    tags: apache,centos,httpd
+    service:
+      name: httpd
+      state: started
+      enabled: yes
+    when: ansible_distribution == "CentOS"
+
+  - name: change e-mail address for admin
+    tags: apache,apache2,debian
+    lineinfile:
+      path: /etc/apache2/conf-available/charset.conf
+      regexp: '^#AddDefaultCharset'
+      line: AddDefaultCharset UTF-8
+    when: ansible_distribution == "Debian"
+    register: apache2
+
+  - name: restart apache2 (Debian)
+    tags: apache,apache2,debian
+    service:
+      name: apache2
+      state: restarted
+    when: apache2.changed
+
   - name: copy default html file for site
     tags: apache,apache2,httpd
     copy:
