@@ -1,44 +1,26 @@
-- name: install apache and php for Debian serversa
-  tags: apache,apache2,debian
+- name: install apache and php packages
+  tags: apache,httpd,php
   apt:
     name:
-      - apache2
-      - libapache2-mod-php
+      - "{{ apache_package_name }}"
+      - "{{ php_package_name }}"
     state: latest
-  when: ansible_distribution == "Debian"
 
-- name: install apache and php for CentOS  servers
-  tags: apache,centos,httpd
-  dnf:
-    name:
-      - httpd
-      - php
-    state: latest
-  when: ansible_distribution == "CentOS"
-
-- name: start httpd (CentOS)
-  tags: apache,centos,httpd
+- name: start and enable apache service
+  tags: apache,httpd
   service:
-    name: httpd
+    name:  "{{ apache_service }}"
     state: started
     enabled: yes
-  when: ansible_distribution == "CentOS"
 
-- name: change e-mail address for admin
+- name: Enable default charset in config file
   tags: apache,apache2,debian
   lineinfile:
     path: /etc/apache2/conf-available/charset.conf
-    regexp: '^#AddDefaultCharset'
-    line: AddDefaultCharset UTF-8
+    regexp: '^AddDefaultCharset'
+    line: "#AddDefaultCharset UTF-8"
   when: ansible_distribution == "Debian"
-  register: apache2
-
-- name: restart apache2 (Debian)
-  tags: apache,apache2,debian
-  service:
-    name: apache2
-    state: restarted
-  when: apache2.changed
+  notify: restart_apache
 
 - name: copy default html file for site
   tags: apache,apache2,httpd
